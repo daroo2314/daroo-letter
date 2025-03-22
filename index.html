@@ -441,7 +441,6 @@
 
 
 
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -486,12 +485,19 @@
     display: none;
     font-size: 14px;
   }
+  .preview-image {
+    max-width: 250px;
+    margin-top: 20px;
+  }
 </style>
 </head>
 <body>
 <div class="container">
   <!-- 제목은 한 번만 표시 -->
   <div class="title">일고오창 By. daroo</div>
+  
+  <!-- 썸네일 미리보기 -->
+  <img src="https://img1.daumcdn.net/thumb/R500x800/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fo1uvK%2FbtsMPuGPFss%2FVDGLwBTLK4CCpFmNDvXlb0%2Fimg.jpg" class="preview-image" alt="공연 포스터">
   
   <!-- 카카오톡 버튼들 -->
   <div class="kakao-buttons">
@@ -510,7 +516,7 @@
   <div id="error-message" class="error-message"></div>
 </div>
 
-<!-- 중요: Kakao SDK를 body 끝부분에 로드하여 DOM이 모두 로드된 후에 초기화 -->
+<!-- Kakao SDK를 body 끝부분에 로드 -->
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.5.0/kakao.min.js" 
       integrity="sha384-kYPsUbBPlktXsY6/oNHSUDZoTX6+YI51f63jCPEIPFP09ttByAdxd2mEjKuhdqn4" 
       crossorigin="anonymous"></script>
@@ -520,7 +526,7 @@
   const TICKET_URL_27 = 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266912';
   const TICKET_URL_28 = 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913';
   
-  // 이미지 URL - 500x800 사이즈로 지정
+  // 이미지 URL - 명시적으로 500x800 크기 지정
   const IMAGE_URL = 'https://img1.daumcdn.net/thumb/R500x800/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fo1uvK%2FbtsMPuGPFss%2FVDGLwBTLK4CCpFmNDvXlb0%2Fimg.jpg';
   
   // 템플릿 ID
@@ -536,39 +542,39 @@
     console.error('에러:', message);
   }
   
-  // Kakao SDK 초기화 함수 - IIFE(즉시 실행 함수)로 한 번만 실행되도록 보장
-  const initKakao = (function() {
-    let initialized = false;
+  // Kakao SDK 초기화 함수 - 한 번만 실행되도록 보장
+  let kakaoInitialized = false;
+  
+  function initKakao() {
+    if (kakaoInitialized) return true;
     
-    return function() {
-      if (initialized) return true;
-      
-      try {
-        if (!Kakao) {
-          showError('Kakao SDK가 로드되지 않았습니다.');
-          return false;
-        }
-        
-        if (Kakao.isInitialized()) {
-          initialized = true;
-          return true;
-        }
-        
-        Kakao.init('804ef611d4f6f7ac4d1459f097a4fe8d');
-        initialized = Kakao.isInitialized();
-        
-        if (!initialized) {
-          showError('Kakao SDK 초기화에 실패했습니다.');
-          return false;
-        }
-        
-        return true;
-      } catch (e) {
-        showError('Kakao SDK 초기화 중 오류 발생: ' + e.message);
+    try {
+      if (!Kakao) {
+        showError('Kakao SDK가 로드되지 않았습니다.');
         return false;
       }
-    };
-  })();
+      
+      // 이미 초기화되었는지 확인
+      if (Kakao.isInitialized()) {
+        kakaoInitialized = true;
+        return true;
+      }
+      
+      // 초기화
+      Kakao.init('804ef611d4f6f7ac4d1459f097a4fe8d');
+      kakaoInitialized = Kakao.isInitialized();
+      
+      if (!kakaoInitialized) {
+        showError('Kakao SDK 초기화에 실패했습니다.');
+        return false;
+      }
+      
+      return true;
+    } catch (e) {
+      showError('Kakao SDK 초기화 중 오류 발생: ' + e.message);
+      return false;
+    }
+  }
   
   // 기본 공유하기 함수
   function sendDefaultLink() {
@@ -581,6 +587,8 @@
           title: "조용수의 '일고오창' 여섯 번째 鼓 : 고수 조용수, 다섯 제(制)의 수궁에 유(留)하다",
           description: '고수 조용수의 북에 다섯 소리꾼의 다섯 제가 연창으로 이어지는 완창무대',
           imageUrl: IMAGE_URL,
+          imageWidth: 500,
+          imageHeight: 800,
           link: {
             mobileWebUrl: TICKET_URL_28,
             webUrl: TICKET_URL_28
@@ -627,11 +635,6 @@
       showError('템플릿 공유하기 실패: ' + e.message);
     }
   }
-  
-  // 문서 로딩 완료 시 SDK 초기화 시도
-  document.addEventListener('DOMContentLoaded', function() {
-    // 일부러 여기서는 초기화 호출하지 않음 - 버튼 클릭 시에만 초기화하도록 설계
-  });
 </script>
 </body>
 </html>
