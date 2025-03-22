@@ -26,12 +26,19 @@
     margin-top: 10px;
     display: none;
   }
+  /* 제목 스타일 */
+  .title {
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
 </style>
 </head>
 <body>
-<h2>일고오창 By. daroo</h2>
+<!-- 제목은 한 번만 표시 -->
+<div class="title">일고오창 By. daroo</div>
 
-<!-- 카카오톡 버튼 -->
+<!-- 카카오톡 버튼 - h2 제거 -->
 <div class="kakao-button" onclick="sendKakaoLink()">
   <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png" alt="카카오톡 공유하기" class="talk-icon">
 </div>
@@ -43,7 +50,7 @@
   // 초기화 함수
   function initKakao() {
     try {
-      // SDK 초기화 (본인의 JavaScript 키로 변경 필요)
+      // SDK 초기화
       Kakao.init('804ef611d4f6f7ac4d1459f097a4fe8d');
       console.log('Kakao SDK 초기화 상태:', Kakao.isInitialized());
       
@@ -104,10 +111,10 @@
     }
   }
 
-  // 페이지 로드 시 카카오 SDK 초기화
-  window.onload = function() {
+  // 페이지 로드 시 카카오 SDK 초기화 - 한 번만 실행되도록 설정
+  document.addEventListener('DOMContentLoaded', function() {
     initKakao();
-  };
+  });
 </script>
 </body>
 </html>
