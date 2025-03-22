@@ -157,48 +157,87 @@
     font-size: 24px;
     margin-bottom: 20px;
   }
+  /* 로그 메시지를 표시할 영역 스타일 */
+  .log-message {
+    margin-top: 10px;
+    color: green;
+    font-size: 12px;
+    display: none;
+  }
 </style>
 </head>
 <body>
 <!-- 제목은 한 번만 표시 -->
 <div class="title">일고오창 By. daroo</div>
-<!-- 카카오톡 버튼 - h2 제거 -->
+<!-- 카카오톡 버튼 -->
 <div class="kakao-button" onclick="sendKakaoLink()">
   <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png" alt="카카오톡 공유하기" class="talk-icon">
 </div>
 <!-- 오류 메시지 표시 영역 -->
 <div id="error-message" class="error-message"></div>
+<!-- 로그 메시지 표시 영역 -->
+<div id="log-message" class="log-message"></div>
+
 <script type="text/javascript">
-  // 티켓 URL 상수 정의
+  // 티켓 URL 상수 정의 - 전체 URL을 명시적으로 지정
   const TICKET_URL_27 = 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266912';
   const TICKET_URL_28 = 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913';
+  
+  // 초기화 상태 확인용 변수
+  let kakaoInitialized = false;
+  
+  // 로그 표시 함수
+  function showLog(message) {
+    const logElement = document.getElementById('log-message');
+    logElement.innerText = message;
+    logElement.style.display = 'block';
+    console.log(message);
+  }
+  
+  // 에러 표시 함수
+  function showError(message) {
+    const errorElement = document.getElementById('error-message');
+    errorElement.innerText = message;
+    errorElement.style.display = 'block';
+    console.error(message);
+  }
   
   // 초기화 함수
   function initKakao() {
     try {
+      // 이미 초기화되었는지 확인
+      if (kakaoInitialized) {
+        showLog('Kakao SDK 이미 초기화되었습니다.');
+        return true;
+      }
+      
       // SDK 초기화
       Kakao.init('804ef611d4f6f7ac4d1459f097a4fe8d');
-      console.log('Kakao SDK 초기화 상태:', Kakao.isInitialized());
+      kakaoInitialized = Kakao.isInitialized();
       
-      if (!Kakao.isInitialized()) {
-        document.getElementById('error-message').style.display = 'block';
-        document.getElementById('error-message').innerText = 'Kakao SDK 초기화에 실패했습니다.';
+      if (kakaoInitialized) {
+        showLog('Kakao SDK 초기화 성공');
+        return true;
+      } else {
+        showError('Kakao SDK 초기화에 실패했습니다.');
+        return false;
       }
     } catch (e) {
-      console.error('Kakao 초기화 오류:', e);
-      document.getElementById('error-message').style.display = 'block';
-      document.getElementById('error-message').innerText = 'Kakao SDK 로딩에 실패했습니다: ' + e.message;
+      showError('Kakao SDK 로딩에 실패했습니다: ' + e.message);
+      return false;
     }
   }
   
   // 카카오톡 공유 함수
   function sendKakaoLink() {
     try {
-      if (!Kakao.isInitialized()) {
-        initKakao(); // 초기화 되지 않았다면 다시 시도
+      // 초기화 여부 확인
+      if (!kakaoInitialized && !initKakao()) {
+        return; // 초기화 실패 시 종료
       }
       
-      Kakao.Share.sendDefault({
+      // 공유 내용 설정
+      const shareContent = {
         objectType: 'feed',
         content: {
           title: "조용수의 '일고오창' 여섯 번째 鼓 : 고수 조용수, 다섯 제(制)의 수궁에 유(留)하다",
@@ -228,16 +267,23 @@
             }
           }
         ]
-      });
+      };
+      
+      // 공유 실행 전 확인 로그
+      console.log('공유 내용:', shareContent);
+      console.log('27일 공연 URL:', TICKET_URL_27);
+      console.log('28일 공연 URL:', TICKET_URL_28);
+      
+      // 공유 실행
+      Kakao.Share.sendDefault(shareContent);
+      showLog('카카오톡 공유 성공');
       
     } catch (e) {
-      console.error('카카오톡 공유 오류:', e);
-      document.getElementById('error-message').style.display = 'block';
-      document.getElementById('error-message').innerText = '카카오톡 공유에 실패했습니다: ' + e.message;
+      showError('카카오톡 공유에 실패했습니다: ' + e.message);
     }
   }
   
-  // 페이지 로드 시 카카오 SDK 초기화 - 한 번만 실행되도록 설정
+  // 페이지 로드 시 카카오 SDK 한 번만 초기화
   document.addEventListener('DOMContentLoaded', function() {
     initKakao();
   });
