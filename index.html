@@ -146,7 +146,7 @@
 </body>
 </html>-->
 
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -165,6 +165,153 @@
   // SDK 초기화 여부 확인
   console.log(Kakao.isInitialized());
   
+  function sendLink() {
+    Kakao.Link.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: "조용수의 '일고오창' 여섯 번째 鼓 : 고수 조용수, 다섯 제(制)의 수궁에 유(留)하다",
+        description: '고수 조용수의 북에 다섯 소리꾼의 다섯 제가 연창으로 이어지는 완창무대',
+        imageUrl:
+          'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fo1uvK%2FbtsMPuGPFss%2FVDGLwBTLK4CCpFmNDvXlb0%2Fimg.jpg',
+        link: {
+          mobileWebUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913',
+          webUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913',
+        },
+      },
+      buttons: [
+        {
+          title: '예매3월27일',
+          link: {
+            mobileWebUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266912',
+            webUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266912',
+          },
+        },
+        {
+          title: '예매3월28일',
+          link: {
+            mobileWebUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913',
+            webUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913',
+          },
+        },
+      ],
+    });
+  }
+</script>
+</body>
+</html>-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>카카오톡 로그인 및 메시지 보내기</title>
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<style>
+  .btn-container {
+    margin: 20px 0;
+  }
+  .btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #FEE500;
+    color: #000000;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+</style>
+</head>
+<body>
+<p><strong>일고오창</strong> By. daroo</p>
+
+<div class="btn-container">
+  <!-- 로그인 버튼 -->
+  <a id="kakao-login-btn" class="btn" href="javascript:loginWithKakao()">카카오로 로그인하기</a>
+  
+  <!-- 공유 버튼 -->
+  <a id="kakao-link-btn" href="javascript:sendLink()">
+    <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png"/>
+  </a>
+</div>
+
+<!-- 로그인 상태 표시 -->
+<div id="login-status"></div>
+
+<script type="text/javascript">
+  // SDK 초기화
+  Kakao.init('804ef611d4f6f7ac4d1459f097a4fe8d');
+  
+  // SDK 초기화 여부 확인
+  console.log('Kakao SDK initialized:', Kakao.isInitialized());
+  
+  // 페이지 로드 시 로그인 상태 확인
+  window.addEventListener('load', function() {
+    checkLoginStatus();
+  });
+  
+  // 로그인 함수
+  function loginWithKakao() {
+    Kakao.Auth.login({
+      success: function(authObj) {
+        console.log('로그인 성공', authObj);
+        
+        // 사용자 정보 요청
+        Kakao.API.request({
+          url: '/v2/user/me',
+          success: function(response) {
+            console.log('사용자 정보:', response);
+            
+            // 로그인 상태 표시
+            document.getElementById('login-status').innerHTML = 
+              '<p>로그인 성공! ' + response.properties.nickname + '님 환영합니다.</p>' +
+              '<button onclick="logout()">로그아웃</button>';
+          },
+          fail: function(error) {
+            console.error('사용자 정보 요청 실패:', error);
+          }
+        });
+      },
+      fail: function(err) {
+        console.error('로그인 실패:', err);
+        alert('로그인에 실패했습니다. 다시 시도해 주세요.');
+      }
+    });
+  }
+  
+  // 로그아웃 함수
+  function logout() {
+    if (Kakao.Auth.getAccessToken()) {
+      Kakao.Auth.logout(function() {
+        console.log('로그아웃 성공');
+        document.getElementById('login-status').innerHTML = 
+          '<p>로그아웃되었습니다.</p>';
+      });
+    }
+  }
+  
+  // 로그인 상태 확인
+  function checkLoginStatus() {
+    if (Kakao.Auth.getAccessToken()) {
+      Kakao.API.request({
+        url: '/v2/user/me',
+        success: function(response) {
+          console.log('이미 로그인된 사용자:', response);
+          document.getElementById('login-status').innerHTML = 
+            '<p>로그인 상태: ' + response.properties.nickname + '님</p>' +
+            '<button onclick="logout()">로그아웃</button>';
+        },
+        fail: function(error) {
+          console.error('사용자 정보 요청 실패:', error);
+        }
+      });
+    } else {
+      console.log('로그인 필요');
+      document.getElementById('login-status').innerHTML = 
+        '<p>로그인이 필요합니다.</p>';
+    }
+  }
+  
+  // 공유 기능
   function sendLink() {
     Kakao.Link.sendDefault({
       objectType: 'feed',
