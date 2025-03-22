@@ -96,7 +96,7 @@
   </body>
 </html>-->
 
-<html>
+<!--<html>
 <head>
 <title>메시지 보내기</title>
 <script id="javascript-sdk" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
@@ -104,8 +104,7 @@
 <body>
 <p><strong>일고오창</strong> By. daroo</p>
 <a id="kakao-link-btn" href="javascript:sendLink()">
-  <img
-    src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png"/>
+  <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png"/>
 </a>
 <script type="text/javascript">
  Kakao.init('804ef611d4f6f7ac4d1459f097a4fe8d');
@@ -113,7 +112,7 @@
     Kakao.Link.sendDefault({
       objectType: 'feed',
       content: {
-        title: "조용수의 일고오창 공연",
+        title: "조용수의 '일고오창' 여섯 번째 鼓 : 고수 조용수, 다섯 제(制)의 수궁에 유(留)하다",
         description: '고수 조용수의 북에 다섯 소리꾼의 다섯 제가 연창으로 이어지는 완창무대',
         imageUrl:
           'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fo1uvK%2FbtsMPuGPFss%2FVDGLwBTLK4CCpFmNDvXlb0%2Fimg.jpg',
@@ -144,5 +143,59 @@
 </script>
 
 
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>메시지 보내기</title>
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+</head>
+<body>
+<p><strong>일고오창</strong> By. daroo</p>
+<a id="kakao-link-btn" href="javascript:sendLink()">
+  <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png"/>
+</a>
+<script type="text/javascript">
+  // SDK 초기화
+  Kakao.init('804ef611d4f6f7ac4d1459f097a4fe8d');
+  
+  // SDK 초기화 여부 확인
+  console.log(Kakao.isInitialized());
+  
+  function sendLink() {
+    Kakao.Link.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: "조용수의 '일고오창' 여섯 번째 鼓 : 고수 조용수, 다섯 제(制)의 수궁에 유(留)하다",
+        description: '고수 조용수의 북에 다섯 소리꾼의 다섯 제가 연창으로 이어지는 완창무대',
+        imageUrl:
+          'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fo1uvK%2FbtsMPuGPFss%2FVDGLwBTLK4CCpFmNDvXlb0%2Fimg.jpg',
+        link: {
+          mobileWebUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913',
+          webUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913',
+        },
+      },
+      buttons: [
+        {
+          title: '예매3월27일',
+          link: {
+            mobileWebUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266912',
+            webUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266912',
+          },
+        },
+        {
+          title: '예매3월28일',
+          link: {
+            mobileWebUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913',
+            webUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913',
+          },
+        },
+      ],
+    });
+  }
+</script>
 </body>
 </html>
