@@ -1,9 +1,9 @@
-<html>
+<!--<html>
 <head>
 <title>메시지보내기</title>
 </head>
 <body>
-  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
+ <!-- <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
   integrity="sha384-DKYJZ8NLiK8MN4/C5P2dtSmLQ4KwPaoqAfyA/DfmEc1VDxu4yyC7wy6K1Hs90nka" crossorigin="anonymous"></script>
 <script>
   Kakao.init('804ef611d4f6f7ac4d1459f097a4fe8d'); // 사용하려는 앱의 JavaScript 키 입력
@@ -89,6 +89,54 @@
   function getCookie(name) {
     var parts = document.cookie.split(name + '=');
     if (parts.length === 2) { return parts[1].split(';')[0]; }
+  }
+</script>
+
+
+  </body>
+</html>-->
+
+<html>
+<head>
+<title>메시지 보내기</title>
+<script id="javascript-sdk" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+</head>
+<body>
+<p><strong>일고오창</strong> By. daroo</p>
+<a id="kakao-link-btn" href="javascript:sendLink()">
+  <img
+    src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png"/>
+</a>
+<script type="text/javascript">
+ Kakao.init('804ef611d4f6f7ac4d1459f097a4fe8d');
+  function sendLink() {
+    Kakao.Link.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '조용수 [일고오창]',
+        description: '일고오창',
+        imageUrl:
+          'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fo1uvK%2FbtsMPuGPFss%2FVDGLwBTLK4CCpFmNDvXlb0%2Fimg.jpg',
+        link: {
+          mobileWebUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913',
+          webUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913',
+        },
+      },
+      social: {
+        likeCount: 醫뗭븘�� ��, //99999媛� 理쒕��낅땲��
+        commentCount: �볤� ��, //99999媛� 理쒕��낅땲��
+        sharedCount: 怨듭쑀 ��, //99999媛� 理쒕��낅땲��
+      },
+      buttons: [
+        {
+          title: '예매하기',
+          link: {
+            mobileWebUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913',
+            webUrl: 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913',
+          },
+        },
+      ],
+    })
   }
 </script>
 
