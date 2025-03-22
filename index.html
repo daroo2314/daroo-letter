@@ -123,7 +123,7 @@
 
 
 
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -284,6 +284,152 @@
   }
   
   // 페이지 로드 시 카카오 SDK 한 번만 초기화
+  document.addEventListener('DOMContentLoaded', function() {
+    initKakao();
+  });
+</script>
+</body>
+</html>-->
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>일고오창 By. daroo</title>
+<!-- 최신 카카오 SDK 사용 -->
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.5.0/kakao.min.js" 
+      integrity="sha384-kYPsUbBPlktXsY6/oNHSUDZoTX6+YI51f63jCPEIPFP09ttByAdxd2mEjKuhdqn4" 
+      crossorigin="anonymous"></script>
+<style>
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    padding: 20px;
+  }
+  .kakao-button {
+    display: inline-block;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .talk-icon {
+    width: 50px;
+    height: 50px;
+  }
+  .error-message {
+    color: red;
+    margin-top: 10px;
+    display: none;
+  }
+  /* 제목 스타일 */
+  .title {
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+<!-- 제목은 한 번만 표시 -->
+<div class="title">일고오창 By. daroo</div>
+<!-- 카카오톡 버튼 -->
+<div class="kakao-button" onclick="sendKakaoLink()">
+  <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png" alt="카카오톡 공유하기" class="talk-icon">
+</div>
+<!-- 오류 메시지 표시 영역 -->
+<div id="error-message" class="error-message"></div>
+
+<script type="text/javascript">
+  // 전역 변수로 초기화 상태 추적
+  let isKakaoInitialized = false;
+  
+  // 티켓 URL 상수 정의
+  const TICKET_URL_27 = 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266912';
+  const TICKET_URL_28 = 'https://www.ntok.go.kr/kr/Ticket/Performance/Details?performanceId=266913';
+  
+  // 이미지 URL
+  const IMAGE_URL = 'https://img1.daumcdn.net/thumb/R500x800/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fo1uvK%2FbtsMPuGPFss%2FVDGLwBTLK4CCpFmNDvXlb0%2Fimg.jpg';
+  
+  // 에러 표시 함수
+  function showError(message) {
+    const errorElement = document.getElementById('error-message');
+    errorElement.innerText = message;
+    errorElement.style.display = 'block';
+    console.error(message);
+  }
+  
+  // 초기화 함수 - 한 번만 실행되도록 수정
+  function initKakao() {
+    // 이미 초기화되었으면 다시 하지 않음
+    if (isKakaoInitialized) {
+      return true;
+    }
+    
+    try {
+      Kakao.init('804ef611d4f6f7ac4d1459f097a4fe8d');
+      isKakaoInitialized = Kakao.isInitialized();
+      
+      if (!isKakaoInitialized) {
+        showError('Kakao SDK 초기화에 실패했습니다.');
+        return false;
+      }
+      
+      return true;
+    } catch (e) {
+      showError('Kakao SDK 로딩에 실패했습니다: ' + e.message);
+      return false;
+    }
+  }
+  
+  // 카카오톡 공유 함수
+  function sendKakaoLink() {
+    // 초기화 확인 및 실행
+    if (!isKakaoInitialized && !initKakao()) {
+      return; // 초기화 실패 시 종료
+    }
+    
+    try {      
+      Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: "조용수의 '일고오창' 여섯 번째 鼓 : 고수 조용수, 다섯 제(制)의 수궁에 유(留)하다",
+          description: '고수 조용수의 북에 다섯 소리꾼의 다섯 제가 연창으로 이어지는 완창무대',
+          imageUrl: IMAGE_URL,
+          link: {
+            // 기본 링크는 3월 28일 공연으로 설정
+            mobileWebUrl: TICKET_URL_28,
+            webUrl: TICKET_URL_28
+          }
+        },
+        buttons: [
+          {
+            title: '예매3월27일',
+            link: {
+              // 첫 번째 버튼 - 3월 27일 공연 링크
+              mobileWebUrl: TICKET_URL_27,
+              webUrl: TICKET_URL_27
+            }
+          },
+          {
+            title: '예매3월28일',
+            link: {
+              // 두 번째 버튼 - 3월 28일 공연 링크
+              mobileWebUrl: TICKET_URL_28,
+              webUrl: TICKET_URL_28
+            }
+          }
+        ]
+      });
+      
+    } catch (e) {
+      showError('카카오톡 공유에 실패했습니다: ' + e.message);
+    }
+  }
+  
+  // 페이지 로드 시 초기화 - 한 번만 실행
   document.addEventListener('DOMContentLoaded', function() {
     initKakao();
   });
